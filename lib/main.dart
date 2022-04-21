@@ -26,8 +26,10 @@ class _HomeState extends State<Home> {
         ),
         Center(
           child: Text('Third Page'),
-        )
-
-    );
+        ),
+          Center(
+            child: Text('Third Page'),
+          )
+    ]);
   }
 }
