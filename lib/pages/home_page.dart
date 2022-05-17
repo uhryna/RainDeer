@@ -16,6 +16,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String city = 'Lviv';         //TODO ✔️заімість лоадінг future builder
 
+
   bool temperatureType = true;
   final df = new DateFormat('dd-MM-yyyy hh:mm a');
   String? weatherType = null;
@@ -61,13 +62,14 @@ class _HomeState extends State<Home> {
     //final PageController controller = PageController();
     return  Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.grey),
+        iconTheme: IconThemeData(color: Colors.black),
         leading: IconButton(
           onPressed: (){
             Navigator.pushNamed(context, "/locations");
           },
           icon: Icon(Icons.add,),
-          iconSize: 40,),
+          iconSize: 40,
+        ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -78,9 +80,10 @@ class _HomeState extends State<Home> {
                     'RainDeer',
                     style: TextStyle(
                       color: Colors.black,
+                      fontSize: 25,
                     ),
                   ),
-                  SmoothPageIndicator(
+                  /*SmoothPageIndicator(
                     controller: PageController(),
                     count: 4,
                     effect: WormEffect(
@@ -88,7 +91,7 @@ class _HomeState extends State<Home> {
                       dotWidth: 16,
                       type: WormType.thin,
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             ),
@@ -104,8 +107,10 @@ class _HomeState extends State<Home> {
                         ),
                 itemBuilder:(context) =>[
                   PopupMenuItem(
-                      child: InkWell(
-                        child: Text('Settings'),
+                      child: GestureDetector(   //TODO переробити
+                        child: FittedBox(
+                            child: Text('Settings')
+                        ),
                         onTap: (){
                           Navigator.popAndPushNamed(context, "/settings"); //TODO розібратися з анімацією, але здається, що вирішення немає
                         },
@@ -127,12 +132,12 @@ class _HomeState extends State<Home> {
             if (!snapshot.hasError) {
               return Container(
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(
-                          "assets/weather_correspondent_images/rainy.png"),
-                      alignment: Alignment.topCenter,
-                      fit: BoxFit.contain,
-                      opacity: 0.1),
+                  //image: DecorationImage(
+                  //    image: AssetImage(
+                  //        "assets/weather_correspondent_images/rainy.png"),
+                  //    alignment: Alignment.topCenter,
+                  //    fit: BoxFit.contain,
+                  //    opacity: 0.1),
 
                 ),
                 child: Column(
@@ -145,11 +150,11 @@ class _HomeState extends State<Home> {
                               child: RefreshIndicator(
                                 onRefresh: _refresh,
                                 child: ListView(
-                                  children: [
+                                  children: [                               //TODO додати theme data
                                     Center(
                                       child: Padding(                 //TODO зробити кращий юай, а саме "паралакс" зверху
                                         padding: EdgeInsets.fromLTRB(
-                                            0, 100, 0, 5),
+                                            0, 50, 0, 5),
                                         child: Text('$city', style: TextStyle(
                                             fontSize: 35,
                                             fontWeight: FontWeight.w400)),
@@ -167,37 +172,61 @@ class _HomeState extends State<Home> {
                                       children: [
                                         Align(
                                           alignment: Alignment.centerLeft,
-                                          child: ElevatedButton.icon(           //TODO зробити нормальну кнопку
-                                            icon: Icon(Icons.umbrella),
-                                            onPressed: () {
-                                              getFinalData();
-                                            },
-                                            label: Text(
-                                                'weather'), //TODO:  ✔️стек замутити і по бокам від рейні падінг розміром з кнопку
-                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.fromLTRB(13,0,0,0),
+                                            child: SizedBox.fromSize(
+                                              size: Size(82, 82),
+                                              child: ClipOval(
+                                                child: Material(
+                                                  color: Colors.white,
+                                                  child: Ink(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(41),
+                                                      border: Border.all(
+                                                          color: const Color(0xFF1B1B1B),
+                                                          width: 1,
+                                                      )
+                                                    ),
+                                                    child: InkWell(
+                                                      splashColor: Colors.blueAccent.withOpacity(0.1),
+                                                      onTap: () {},
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        children: <Widget>[
+                                                          Icon(Icons.umbrella_outlined),
+                                                          Text("Wardrobe"),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
                                         ),
                                         Align(
                                           alignment: Alignment.center,
-                                          child: Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                0, 20, 0, 0),
-                                            child: Text(
-                                                'Rainy', style: TextStyle(
-                                                fontSize: 30,
-                                                fontWeight: FontWeight.w400)),
+                                          child: Column(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    0, 20, 0, 0),
+                                                child: Text(
+                                                    'Rainy', style: TextStyle(
+                                                    fontSize: 30,
+                                                    fontWeight: FontWeight.w400)),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    15, 15, 0, 15),
+                                                child: Text('Feels like $feelsLike°',
+                                                    style: TextStyle(fontSize: 20,
+                                                        fontWeight: FontWeight.w400)),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
-                                    ),
-
-                                    Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.fromLTRB(
-                                            15, 15, 0, 15),
-                                        child: Text('Feels like $feelsLike°',
-                                            style: TextStyle(fontSize: 20,
-                                                fontWeight: FontWeight.w400)),
-                                      ),
                                     ),
                                     Divider(thickness: 3, height: 25,),       //TODO ClipOval
                                     SingleChildScrollView(
@@ -205,64 +234,148 @@ class _HomeState extends State<Home> {
                                       child: Row(
                                         children: [
                                           Container(
-                                            color: Colors.red,
-                                            height: 75,
-                                            width: 65,
+                                            height: (MediaQuery. of(context). size. width)/5,
+                                            width: (MediaQuery. of(context). size. width)/5,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text('2 AM'),
+                                                Icon(Icons.wheelchair_pickup),
+                                                Text('24°')
+                                              ],
+                                            ),
                                           ),
                                           Container(
-                                            color: Colors.lightGreenAccent,
-                                            height: 75,
-                                            width: 65,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text('5 AM'),
+                                                Icon(Icons.wheelchair_pickup),
+                                                Text('24°')
+                                              ],
+                                            ),
+                                            height: (MediaQuery. of(context). size. width)/5,
+                                            width: (MediaQuery. of(context). size. width)/5,
                                           ),
                                           Container(
-                                            color: Colors.green,
-                                            height: 75,
-                                            width: 65,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text('8 AM'),
+                                                Icon(Icons.wheelchair_pickup),
+                                                Text('24°')
+                                              ],
+                                            ),
+                                            height: (MediaQuery. of(context). size. width)/5,
+                                            width: (MediaQuery. of(context). size. width)/5,
                                           ),
                                           Container(
-                                            color: Colors.pink,
-                                            height: 75,
-                                            width: 65,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text('11 AM'),
+                                                Icon(Icons.wheelchair_pickup),
+                                                Text('24°')
+                                              ],
+                                            ),
+                                            height: (MediaQuery. of(context). size. width)/5,
+                                            width: (MediaQuery. of(context). size. width)/5,
                                           ),
                                           Container(
-                                            color: Colors.white,
-                                            height: 75,
-                                            width: 65,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text('2 PM'),
+                                                Icon(Icons.wheelchair_pickup),
+                                                Text('24°')
+                                              ],
+                                            ),
+                                            height: (MediaQuery. of(context). size. width)/5,
+                                            width: (MediaQuery. of(context). size. width)/5,
                                           ),
                                           Container(
-                                            color: Colors.black,
-                                            height: 75,
-                                            width: 65,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text('5 PM'),
+                                                Icon(Icons.wheelchair_pickup),
+                                                Text('24°')
+                                              ],
+                                            ),
+                                            height: (MediaQuery. of(context). size. width)/5,
+                                            width: (MediaQuery. of(context). size. width)/5,
                                           ),
                                           Container(
-                                            color: Colors.blue,
-                                            height: 75,
-                                            width: 65,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text('8 PM'),
+                                                Icon(Icons.wheelchair_pickup),
+                                                Text('24°')
+                                              ],
+                                            ),
+                                            height: (MediaQuery. of(context). size. width)/5,
+                                            width: (MediaQuery. of(context). size. width)/5,
                                           ),
                                           Container(
-                                            color: Colors.orange,
-                                            height: 75,
-                                            width: 65,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text('11 PM'),
+                                                Icon(Icons.wheelchair_pickup),
+                                                Text('24°')
+                                              ],
+                                            ),
+                                            height: (MediaQuery. of(context). size. width)/5,
+                                            width: (MediaQuery. of(context). size. width)/5,
                                           ),
                                           Container(
-                                            color: Colors.red,
-                                            height: 75,
-                                            width: 65,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text('2 AM'),
+                                                Icon(Icons.wheelchair_pickup),
+                                                Text('24°')
+                                              ],
+                                            ),
+                                            height: (MediaQuery. of(context). size. width)/5,
+                                            width: (MediaQuery. of(context). size. width)/5,
                                           ),
                                           Container(
-                                            color: Colors.lightGreenAccent,
-                                            height: 75,
-                                            width: 65,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text('5 AM'),
+                                                Icon(Icons.wheelchair_pickup),
+                                                Text('24°')
+                                              ],
+                                            ),
+                                            height: (MediaQuery. of(context). size. width)/5,
+                                            width: (MediaQuery. of(context). size. width)/5,
                                           ),
                                           Container(
-                                            color: Colors.green,
-                                            height: 75,
-                                            width: 65,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text('8 AM'),
+                                                Icon(Icons.wheelchair_pickup),
+                                                Text('24°')
+                                              ],
+                                            ),
+                                            height: (MediaQuery. of(context). size. width)/5,
+                                            width: (MediaQuery. of(context). size. width)/5,
                                           ),
                                           Container(
-                                            color: Colors.pink,
-                                            height: 75,
-                                            width: 65,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text('11 AM'),
+                                                Icon(Icons.wheelchair_pickup),
+                                                Text('24°')
+                                              ],
+                                            ),
+                                            height: (MediaQuery. of(context). size. width)/5,
+                                            width: (MediaQuery. of(context). size. width)/5,
                                           ),
                                         ],
                                       ),
@@ -447,512 +560,6 @@ class _HomeState extends State<Home> {
                                                   fontSize: 30,
                                                   fontWeight: FontWeight
                                                       .w300),),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(thickness: 3, height: 25,),       //TODO ClipOval
-                                    SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            color: Colors.red,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.lightGreenAccent,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.green,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.pink,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.white,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.black,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.blue,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.orange,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.red,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.lightGreenAccent,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.green,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.pink,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Divider(thickness: 3, height: 25,),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 10),
-                                              child: Text('Sunrise ',
-                                                style: TextStyle(
-                                                    fontSize: 15),),
-                                            ),
-                                          ),
-                                        ),
-
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 10),
-                                              child: Text('Sunset ',
-                                                style: TextStyle(
-                                                    fontSize: 15),),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              child: Text('${sunrise}',
-                                                style: TextStyle(fontSize: 30,
-                                                    fontWeight: FontWeight
-                                                        .w600),),
-                                            ),
-                                          ),
-                                        ),
-
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              child: Text('$sunset',
-                                                style: TextStyle(fontSize: 30,
-                                                    fontWeight: FontWeight
-                                                        .w600),),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(thickness: 3, height: 25,),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 10),
-                                              child: Text('Wind',
-                                                style: TextStyle(
-                                                    fontSize: 15),),
-                                            ),
-                                          ),
-                                        ),
-
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 10),
-                                              child: Text('Humidity',
-                                                style: TextStyle(
-                                                    fontSize: 15),),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              child: Text('$windSpeed km/h',
-                                                style: TextStyle(fontSize: 30,
-                                                    fontWeight: FontWeight
-                                                        .w600),),
-                                            ),
-                                          ),
-                                        ),
-
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              child: Text(
-                                                '$humidity%', style: TextStyle(
-                                                  fontSize: 30,
-                                                  fontWeight: FontWeight
-                                                      .w600),),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(thickness: 3, height: 25,),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 10),
-                                              child: Text('Pressure',
-                                                style: TextStyle(
-                                                    fontSize: 15),),
-                                            ),
-                                          ),
-                                        ),
-
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 10),
-                                              child: Text('Humidity',
-                                                style: TextStyle(
-                                                    fontSize: 15),),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              child: Text('$pressure hPa',
-                                                style: TextStyle(fontSize: 30,
-                                                    fontWeight: FontWeight
-                                                        .w600),),
-                                            ),
-                                          ),
-                                        ),
-
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              child: Text(
-                                                '$humidity%', style: TextStyle(
-                                                  fontSize: 30,
-                                                  fontWeight: FontWeight
-                                                      .w600),),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(thickness: 3, height: 25,),       //TODO ClipOval
-                                    SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            color: Colors.red,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.lightGreenAccent,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.green,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.pink,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.white,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.black,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.blue,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.orange,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.red,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.lightGreenAccent,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.green,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                          Container(
-                                            color: Colors.pink,
-                                            height: 75,
-                                            width: 65,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Divider(thickness: 3, height: 25,),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 10),
-                                              child: Text('Sunrise ',
-                                                style: TextStyle(
-                                                    fontSize: 15),),
-                                            ),
-                                          ),
-                                        ),
-
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 10),
-                                              child: Text('Sunset ',
-                                                style: TextStyle(
-                                                    fontSize: 15),),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              child: Text('${sunrise}',
-                                                style: TextStyle(fontSize: 30,
-                                                    fontWeight: FontWeight
-                                                        .w600),),
-                                            ),
-                                          ),
-                                        ),
-
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              child: Text('$sunset',
-                                                style: TextStyle(fontSize: 30,
-                                                    fontWeight: FontWeight
-                                                        .w600),),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(thickness: 3, height: 25,),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 10),
-                                              child: Text('Wind',
-                                                style: TextStyle(
-                                                    fontSize: 15),),
-                                            ),
-                                          ),
-                                        ),
-
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 10),
-                                              child: Text('Humidity',
-                                                style: TextStyle(
-                                                    fontSize: 15),),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              child: Text('$windSpeed km/h',
-                                                style: TextStyle(fontSize: 30,
-                                                    fontWeight: FontWeight
-                                                        .w600),),
-                                            ),
-                                          ),
-                                        ),
-
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              child: Text(
-                                                '$humidity%', style: TextStyle(
-                                                  fontSize: 30,
-                                                  fontWeight: FontWeight
-                                                      .w600),),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(thickness: 3, height: 25,),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 10),
-                                              child: Text('Pressure',
-                                                style: TextStyle(
-                                                    fontSize: 15),),
-                                            ),
-                                          ),
-                                        ),
-
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 10),
-                                              child: Text('Humidity',
-                                                style: TextStyle(
-                                                    fontSize: 15),),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              child: Text('$pressure hPa',
-                                                style: TextStyle(fontSize: 30,
-                                                    fontWeight: FontWeight
-                                                        .w600),),
-                                            ),
-                                          ),
-                                        ),
-
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          flex: 2,
-                                          child: Center(
-                                            child: Container(
-                                              child: Text(
-                                                '$humidity%', style: TextStyle(
-                                                  fontSize: 30,
-                                                  fontWeight: FontWeight
-                                                      .w600),),
                                             ),
                                           ),
                                         ),

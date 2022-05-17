@@ -18,7 +18,7 @@ class LocationsPage extends StatelessWidget {
             Align(
               alignment: Alignment.topLeft,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20,20,0,40),
+                padding: const EdgeInsets.fromLTRB(30,20,0,20),
                 child: Text(
                   'Manage cities',
                   style: TextStyle(
@@ -30,6 +30,31 @@ class LocationsPage extends StatelessWidget {
             //TODO: картку, при нажиманні на яку, відкривається нова сторінка серч бар пейдж
             //TODO: listview.builder з картками відповідно до доданих міст / ше треба зробити окремий клас як буде виглядати лісттайл
             //TODO flutter_slidable location package
+            //TODO listview+sliverappbar
+            Padding(
+              padding: const EdgeInsets.fromLTRB(30,0,30,30),
+              child: GestureDetector(
+                    onTap: () {
+                      Navigator.popAndPushNamed(context, "/settings");
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(12,12,12,12),
+                        child: Row(
+                          children: [
+                            Icon(Icons.search),
+                            Text(
+                              'Enter Location'
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+              ),
+            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(10,0,10,0),
@@ -40,14 +65,14 @@ class LocationsPage extends StatelessWidget {
                       child: ListTile(
                         isThreeLine: true,
                         shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.white70, width: 0),
+                          side: BorderSide(color: Colors.black, width: 1),
                           borderRadius: BorderRadius.circular(20),),
                         onTap: () {},
-                        tileColor: Colors.blueGrey,
-                        title: Text('Lviv', style: TextStyle(fontSize: 30, color: Colors.white),),
-                        leading: Icon(Icons.wb_sunny_outlined, color: Colors.white,),
-                        subtitle: Text('25° / 17°', style: TextStyle(fontSize: 20, color: Colors.white),),
-                        trailing: Text('23°', style: TextStyle(fontSize: 45, color: Colors.white),),
+                        tileColor: Colors.white,
+                        title: Text('Lviv', style: TextStyle(fontSize: 30, color: Colors.black),),
+                        leading: Icon(Icons.wb_sunny_outlined, color: Colors.black,),
+                        subtitle: Text('25° / 17°', style: TextStyle(fontSize: 20, color: Colors.black),),
+                        trailing: Text('23°', style: TextStyle(fontSize: 45, color: Colors.black),),
                       ),
                     );
                   },
