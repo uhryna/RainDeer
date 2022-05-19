@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class WardrobePage extends StatefulWidget {
-  const WardrobePage({Key? key}) : super(key: key);
+class SearchBar extends StatefulWidget {
+  const SearchBar({Key? key}) : super(key: key);
 
   @override
-  State<WardrobePage> createState() => _WardrobePageState();
+  State<SearchBar> createState() => _SearchBarState();
 }
 
-class _WardrobePageState extends State<WardrobePage> {
+class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,9 +15,9 @@ class _WardrobePageState extends State<WardrobePage> {
         leading: IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.arrow_back)),
       ),                 //TODO зробити сторінку
       body: SafeArea(
-        child: Text(
-            'Тут буде пошук wardrobe'
-        ),
+          child: Text(
+              'Тут буде пошук міст через google places'
+          ),
       ),
     );
   }

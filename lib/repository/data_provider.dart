@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
+import 'package:new_test/repository/AnotherWeatherData.dart';
 import 'package:new_test/repository/WeatherData.dart';
 
 class GetWeatherData{
@@ -17,3 +18,15 @@ class GetWeatherData{
   }
 }
 
+class GetAnotherWeatherData{
+  Future<AnotherWeatherData> getData(String city) async{
+    Response response = await get(Uri.parse('http://api.openweathermap.org/data/2.5/forecast?q=$city&appid=3efbf22a4338086042c6068277219092'));
+    return compute(_parse, response.body);
+
+  } //15df47382356839356ce7b869848df2e
+  AnotherWeatherData _parse (String body){
+    final responceMap = json.decode(body);
+    print(responceMap);
+    return AnotherWeatherData.fromJson(responceMap);
+  }
+}

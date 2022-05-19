@@ -12,12 +12,12 @@ class LocationsPage extends StatelessWidget {
           children: [
             AppBar(
               leading: IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.arrow_back, color: Colors.black,)),
-              backgroundColor: Colors.transparent..withOpacity(0),
+              backgroundColor: Colors.white,
               elevation: 0,
             ),
             Align(
               alignment: Alignment.topLeft,
-              child: Padding(
+              child: Container(
                 padding: const EdgeInsets.fromLTRB(30,20,0,20),
                 child: Text(
                   'Manage cities',
@@ -35,9 +35,11 @@ class LocationsPage extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(30,0,30,30),
               child: GestureDetector(
                     onTap: () {
-                      Navigator.popAndPushNamed(context, "/settings");
+                      Navigator.pushNamed(context, "/search");
+
                     },
                     child: Card(
+                      elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),

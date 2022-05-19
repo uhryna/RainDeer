@@ -16,13 +16,30 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String city = 'Lviv';         //TODO ✔️заімість лоадінг future builder
 
-
+                                        //TODO flutterfire_ui
   bool temperatureType = true;
   final df = new DateFormat('dd-MM-yyyy hh:mm a');
-  String? weatherType = null;
+  String? weatherTypeInfo;
   int? sunrise = null, sunset = null, humidity = null, pressure = null, temperature, feelsLike = null;
   double? windSpeed = null;//TODO intl package дейт формат завтра зроблю
   late Future future;
+
+
+  Future<void> doubleFunction() async {
+    getFinalData();
+    getAnotherData();
+  }
+
+
+  Future<void> getAnotherData() async{
+    GetAnotherWeatherData instance = GetAnotherWeatherData();
+    final data = await instance.getData(city);
+    //var info = data.listb?.list;
+    //print(info);
+    setState(() {
+    });
+  }
+
 
   Future<void> getFinalData() async{
     GetWeatherData instance = GetWeatherData();
@@ -37,9 +54,9 @@ class _HomeState extends State<Home> {
       windSpeed = data.wind?.speed;
       feelsLike = data.main?.feelsLike?.round();
       temperature = data.main?.temp?.round();
-      //weatherType = data.weather['main'] as String?; ??????????????????????????????????????????????????
+      //weatherTypeInfo = data.weather['main']; //??????????????????????????????????????????????????
       //var date = DateTime.fromMillisecondsSinceEpoch(sunriseValue * 1000);
-      //print(date);
+      print(data);
     });
     //print(sunrise);
 
@@ -54,7 +71,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    future = getFinalData();                    //чи це треба(зайвим не буде)
+    future = getFinalData();
+    //getAnotherData();//чи це треба(зайвим не буде)
   }
 
   @override
@@ -148,11 +166,11 @@ class _HomeState extends State<Home> {
                           children: <Widget>[
                             Center(
                               child: RefreshIndicator(
-                                onRefresh: _refresh,
+                                onRefresh: doubleFunction,
                                 child: ListView(
                                   children: [                               //TODO додати theme data
                                     Center(
-                                      child: Padding(                 //TODO зробити кращий юай, а саме "паралакс" зверху
+                                      child: Padding(
                                         padding: EdgeInsets.fromLTRB(
                                             0, 50, 0, 5),
                                         child: Text('$city', style: TextStyle(
@@ -189,7 +207,9 @@ class _HomeState extends State<Home> {
                                                     ),
                                                     child: InkWell(
                                                       splashColor: Colors.blueAccent.withOpacity(0.1),
-                                                      onTap: () {},
+                                                      onTap: () {
+                                                        Navigator.pushNamed(context, '/wardrobe');
+                                                      },
                                                       child: Column(
                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                         children: <Widget>[
@@ -228,6 +248,75 @@ class _HomeState extends State<Home> {
                                         ),
                                       ],
                                     ),
+                                    //Divider(thickness: 3, height: 25,),
+                                    /*Card(
+                                      child:Container(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(Icons.calendar_today),
+                                                Text(
+                                                  '10-day forecast',
+                                                ),
+                                              ],
+                                            ),
+                                            Divider(thickness: 1, height: 25,),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text('Today'),
+                                                Icon(Icons.wb_sunny_outlined),
+                                                Text('max: 23d'),
+                                                Text('min: 13d'),
+                                              ],
+                                            ),
+                                            Divider(thickness: 1, height: 25,),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text('Today'),
+                                                Icon(Icons.wb_sunny_outlined),
+                                                Text('max: 23d'),
+                                                Text('min: 13d'),
+                                              ],
+                                            ),
+                                            Divider(thickness: 1, height: 25,),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text('Today'),
+                                                Icon(Icons.wb_sunny_outlined),
+                                                Text('max: 23d'),
+                                                Text('min: 13d'),
+                                              ],
+                                            ),
+                                            Divider(thickness: 1, height: 25,),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text('Today'),
+                                                Icon(Icons.wb_sunny_outlined),
+                                                Text('max: 23d'),
+                                                Text('min: 13d'),
+                                              ],
+                                            ),
+                                            Divider(thickness: 1, height: 25,),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text('Today'),
+                                                Icon(Icons.wb_sunny_outlined),
+                                                Text('max: 23d'),
+                                                Text('min: 13d'),
+                                              ],
+                                            ),
+
+                                          ],
+                                        ),
+                                      ),
+                                    ),*/
                                     Divider(thickness: 3, height: 25,),       //TODO ClipOval
                                     SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
@@ -240,7 +329,7 @@ class _HomeState extends State<Home> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text('2 AM'),
-                                                Icon(Icons.wheelchair_pickup),
+                                                Icon(Icons.cloud),
                                                 Text('24°')
                                               ],
                                             ),
@@ -250,7 +339,7 @@ class _HomeState extends State<Home> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text('5 AM'),
-                                                Icon(Icons.wheelchair_pickup),
+                                                Icon(Icons.cloud),
                                                 Text('24°')
                                               ],
                                             ),
@@ -262,7 +351,7 @@ class _HomeState extends State<Home> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text('8 AM'),
-                                                Icon(Icons.wheelchair_pickup),
+                                                Icon(Icons.cloud),
                                                 Text('24°')
                                               ],
                                             ),
@@ -274,7 +363,7 @@ class _HomeState extends State<Home> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text('11 AM'),
-                                                Icon(Icons.wheelchair_pickup),
+                                                Icon(Icons.cloud),
                                                 Text('24°')
                                               ],
                                             ),
@@ -286,7 +375,7 @@ class _HomeState extends State<Home> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text('2 PM'),
-                                                Icon(Icons.wheelchair_pickup),
+                                                Icon(Icons.sunny),
                                                 Text('24°')
                                               ],
                                             ),
@@ -298,7 +387,7 @@ class _HomeState extends State<Home> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text('5 PM'),
-                                                Icon(Icons.wheelchair_pickup),
+                                                Icon(Icons.sunny),
                                                 Text('24°')
                                               ],
                                             ),
@@ -310,7 +399,7 @@ class _HomeState extends State<Home> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text('8 PM'),
-                                                Icon(Icons.wheelchair_pickup),
+                                                Icon(Icons.sunny),
                                                 Text('24°')
                                               ],
                                             ),
@@ -322,7 +411,7 @@ class _HomeState extends State<Home> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text('11 PM'),
-                                                Icon(Icons.wheelchair_pickup),
+                                                Icon(Icons.sunny),
                                                 Text('24°')
                                               ],
                                             ),
@@ -334,7 +423,7 @@ class _HomeState extends State<Home> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text('2 AM'),
-                                                Icon(Icons.wheelchair_pickup),
+                                                Icon(Icons.sunny),
                                                 Text('24°')
                                               ],
                                             ),
@@ -346,7 +435,7 @@ class _HomeState extends State<Home> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text('5 AM'),
-                                                Icon(Icons.wheelchair_pickup),
+                                                Icon(Icons.sunny),
                                                 Text('24°')
                                               ],
                                             ),
@@ -358,7 +447,7 @@ class _HomeState extends State<Home> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text('8 AM'),
-                                                Icon(Icons.wheelchair_pickup),
+                                                Icon(Icons.sunny),
                                                 Text('24°')
                                               ],
                                             ),
@@ -370,7 +459,7 @@ class _HomeState extends State<Home> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text('11 AM'),
-                                                Icon(Icons.wheelchair_pickup),
+                                                Icon(Icons.sunny),
                                                 Text('24°')
                                               ],
                                             ),
@@ -378,6 +467,154 @@ class _HomeState extends State<Home> {
                                             width: (MediaQuery. of(context). size. width)/5,
                                           ),
                                         ],
+                                      ),
+                                    ),
+                                    Divider(thickness: 3, height: 25,),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(8,0,8
+                                          ,0),
+                                      child: Card(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                                        ),
+                                        color: Colors.white,
+                                        child:Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: Icon(Icons.calendar_today),
+                                                  ),
+                                                  Text(
+                                                    '5-day forecast',
+                                                  ),
+                                                ],
+                                              ),
+                                              Divider(thickness: 0, height: 25,),
+                                              Stack(
+                                                children: [
+                                                  Align(
+                                                    alignment: Alignment.centerLeft,
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.fromLTRB(8,0,10,0),
+                                                          child: Icon(Icons.wb_sunny_outlined),
+                                                        ),
+                                                        Text('Tue·Rainy', style: TextStyle(fontSize: 20),),
+                                                      ],
+                                                    ),
+                                                  ),
+
+                                                  Align(alignment:Alignment.centerRight, child: Padding(
+                                                    padding: const EdgeInsets.fromLTRB(0,0,10,0),
+                                                    child: Text('22°/15°', style: TextStyle(fontSize: 20),),
+                                                  )),
+
+                                                ],
+                                              ),
+                                              Divider(thickness: 0, height: 25,),
+                                              Stack(
+                                                children: [
+                                                  Align(
+                                                    alignment: Alignment.centerLeft,
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.fromLTRB(8,0,10,0),
+                                                          child: Icon(Icons.cloud),
+                                                        ),
+                                                        Text('Wed·Clear', style: TextStyle(fontSize: 20),),
+                                                      ],
+                                                    ),
+                                                  ),
+
+                                                  Align(alignment:Alignment.centerRight, child: Padding(
+                                                    padding: const EdgeInsets.fromLTRB(0,0,10,0),
+                                                    child: Text('23°/14°', style: TextStyle(fontSize: 20),),
+                                                  )),
+
+                                                ],
+                                              ),
+                                              Divider(thickness: 0, height: 25,),
+                                              Stack(
+                                                children: [
+                                                  Align(
+                                                    alignment: Alignment.centerLeft,
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.fromLTRB(8,0,10,0),
+                                                          child: Icon(Icons.storm),
+                                                        ),
+                                                        Text('Thu·Clouds', style: TextStyle(fontSize: 20),),
+                                                      ],
+                                                    ),
+                                                  ),
+
+                                                  Align(alignment:Alignment.centerRight, child: Padding(
+                                                    padding: const EdgeInsets.fromLTRB(0,0,10,0),
+                                                    child: Text('20°/11°', style: TextStyle(fontSize: 20),),
+                                                  )),
+
+                                                ],
+                                              ),
+                                              Divider(thickness: 0, height: 25,),
+                                              Stack(
+                                                children: [
+                                                  Align(
+                                                    alignment: Alignment.centerLeft,
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.fromLTRB(8,0,10,0),
+                                                          child: Icon(Icons.thunderstorm),
+                                                        ),
+                                                        Text('Fri·Clear', style: TextStyle(fontSize: 20),),
+                                                      ],
+                                                    ),
+                                                  ),
+
+                                                  Align(alignment:Alignment.centerRight, child: Padding(
+                                                    padding: const EdgeInsets.fromLTRB(0,0,10,0),
+                                                    child: Text('25°/16°', style: TextStyle(fontSize: 20),),
+                                                  )),
+
+                                                ],
+                                              ),
+                                              Divider(thickness: 0, height: 25,),
+                                              Stack(
+                                                children: [
+                                                  Align(
+                                                    alignment: Alignment.centerLeft,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.fromLTRB(0,0,0,10),
+                                                      child: Row(
+                                                        children: [
+                                                          Padding(
+                                                            padding: const EdgeInsets.fromLTRB(8,0,10,0),
+                                                            child: Icon(Icons.wb_sunny_outlined),
+                                                          ),
+                                                          Text('Sat·Clouds', style: TextStyle(fontSize: 20),),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+
+                                                  Align(alignment:Alignment.centerRight, child: Padding(
+                                                    padding: const EdgeInsets.fromLTRB(0,0,10,0),
+                                                    child: Text('22°/15°', style: TextStyle(fontSize: 20),),
+                                                  )),
+
+                                                ],
+                                              ),
+
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     Divider(thickness: 3, height: 25,),
