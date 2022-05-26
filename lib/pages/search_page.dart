@@ -13,7 +13,7 @@ class _SearchBarState extends State<SearchBar> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.arrow_back)),
-      ),                 //TODO зробити сторінку
+      ),                 //TODO зробити сторінку і як зробити шоб
       body: SafeArea(
           child: Text(
               'Тут буде пошук міст через google places'

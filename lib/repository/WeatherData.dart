@@ -157,7 +157,7 @@ class Wind {
     deg = json['deg'];
     gust = json['gust'];
   }
-  double? speed;
+  num? speed;
   int? deg;
   double? gust;
 

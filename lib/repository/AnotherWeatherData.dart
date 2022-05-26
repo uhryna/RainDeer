@@ -170,7 +170,7 @@ class Listb {
   Clouds? clouds;
   Wind? wind;
   int? visibility;
-  int? pop;
+  num? pop;
   Sys? sys;
   String? dtTxt;
 
@@ -234,9 +234,9 @@ class Wind {
     deg = json['deg'];
     gust = json['gust'];
   }
-  double? speed;
+  num? speed;
   int? deg;
-  double? gust;
+  num? gust;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -321,7 +321,8 @@ class Main {
       this.seaLevel, 
       this.grndLevel, 
       this.humidity, 
-      this.tempKf,});
+      //this.tempKf,
+  });
 
   Main.fromJson(dynamic json) {
     temp = json['temp'];
@@ -332,17 +333,17 @@ class Main {
     seaLevel = json['sea_level'];
     grndLevel = json['grnd_level'];
     humidity = json['humidity'];
-    tempKf = json['temp_kf'];
+    //tempKf = json['temp_kf'];
   }
-  double? temp;
-  double? feelsLike;
-  double? tempMin;
-  double? tempMax;
+  num? temp;
+  num? feelsLike;
+  num? tempMin;
+  num? tempMax;
   int? pressure;
   int? seaLevel;
   int? grndLevel;
   int? humidity;
-  int? tempKf;
+  //double? tempKf;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -354,7 +355,7 @@ class Main {
     map['sea_level'] = seaLevel;
     map['grnd_level'] = grndLevel;
     map['humidity'] = humidity;
-    map['temp_kf'] = tempKf;
+    //map['temp_kf'] = tempKf;
     return map;
   }
 

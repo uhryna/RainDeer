@@ -3,7 +3,24 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:new_test/repository/AnotherWeatherData.dart';
+import 'package:new_test/repository/DailyData.dart';
 import 'package:new_test/repository/WeatherData.dart';
+import 'package:new_test/repository/LatLongData.dart';
+
+
+class GetLatLongData{
+
+  Future<LatLongData> getData(String city) async{
+    Response response = await get(Uri.parse('http://api.openweathermap.org/geo/1.0/direct?q=$city&appid=3efbf22a4338086042c6068277219092'));
+    return compute(_parse, response.body);
+
+  }
+  LatLongData _parse (String body){
+    final responceMap = json.decode(body);
+    //print(responceMap);
+    return LatLongData.fromJson(responceMap[0]);
+  }
+}
 
 class GetWeatherData{
 
@@ -14,19 +31,36 @@ class GetWeatherData{
   }
     WeatherData _parse (String body){
     final responceMap = json.decode(body);
+    //print(responceMap);
     return WeatherData.fromJson(responceMap);
   }
 }
 
 class GetAnotherWeatherData{
-  Future<AnotherWeatherData> getData(String city) async{
-    Response response = await get(Uri.parse('http://api.openweathermap.org/data/2.5/forecast?q=$city&appid=3efbf22a4338086042c6068277219092'));
-    return compute(_parse, response.body);
 
+  Future<AnotherWeatherData> getData(String city) async{
+      Response response = await get(Uri.parse(
+          'http://api.openweathermap.org/data/2.5/forecast?q=$city&appid=3efbf22a4338086042c6068277219092&units=metric'));
+      return compute(_parse, response.body);
   } //15df47382356839356ce7b869848df2e
+
   AnotherWeatherData _parse (String body){
     final responceMap = json.decode(body);
-    print(responceMap);
+    //print(responceMap);
     return AnotherWeatherData.fromJson(responceMap);
+  }
+}
+
+class GetDailyData{
+
+  Future<DailyData> getData(double? lat, double? lon) async{
+    Response response = await get(Uri.parse('https://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$lon&exclude=hourly,current,minutely,alerts&appid=3efbf22a4338086042c6068277219092&units=metric'));
+    return compute(_parse, response.body);
+
+  }
+  DailyData _parse (String body){
+    final responceMap = json.decode(body);
+    //print(responceMap);
+    return DailyData.fromJson(responceMap);
   }
 }
