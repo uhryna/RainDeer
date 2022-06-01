@@ -21,15 +21,19 @@ class _SettingsPageState extends State<SettingsPage> {
           leading: IconButton(onPressed: () {
             Navigator.pop(context);
           }, icon: Icon(Icons.arrow_back, color: Colors.black,)),
-          title: Text('Settings', style: TextStyle(color: Colors.black),),
+          //title: Text('Settings', style: TextStyle(color: Colors.black),),
           centerTitle: true,
-          backgroundColor: Colors.transparent,
-          elevation: 1,
+          backgroundColor: Colors.white,
+          elevation: 0,
         ),
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Text('Settings', style: TextStyle(color: Colors.black,fontSize: 40, fontWeight: FontWeight.w200),),
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(15, 20, 0, 10),
                 child: Text(

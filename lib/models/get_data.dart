@@ -11,6 +11,15 @@ Future<AllData> collectAllData(String city) async{
   AnotherWeatherData anotherData = await AnotherData().getAnotherData(city);
   DailyData dailyData = await AnotherDailyData().getDailyData(latLongData.lat,latLongData.lon);
   return AllData(weatherData, latLongData, anotherData, dailyData);
+  }
+
+Future<AllData?> collectAllDataCheck(String city) async{
+  WeatherData weatherData = await FinalData().getFinalData(city);
+  if(weatherData.cod != 200){
+  return null;
+}else{
+    return await collectAllData(city);//collectAllData(city);//TODO м?
+  }
 }
 
 class AllData{
@@ -48,7 +57,7 @@ class AnotherData{
   }
 }
 class AnotherDailyData{
-  Future<DailyData> getDailyData(double? lat, long) async{ //TODO переробити
+  Future<DailyData> getDailyData(double? lat, long) async{
 
     GetDailyData instance = GetDailyData();
     final data = await instance.getData(lat, long);
