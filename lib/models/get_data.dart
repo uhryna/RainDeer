@@ -11,14 +11,15 @@ Future<AllData> collectAllData(String city) async{
   AnotherWeatherData anotherData = await AnotherData().getAnotherData(city);
   DailyData dailyData = await AnotherDailyData().getDailyData(latLongData.lat,latLongData.lon);
   return AllData(weatherData, latLongData, anotherData, dailyData);
-  }
+}
 
 Future<AllData?> collectAllDataCheck(String city) async{
   WeatherData weatherData = await FinalData().getFinalData(city);
   if(weatherData.cod != 200){
-  return null;
-}else{
-    return await collectAllData(city);//collectAllData(city);//TODO м?
+    return null;
+  }
+  else{
+    return await collectAllData(city);//TODO м?
   }
 }
 
@@ -29,47 +30,39 @@ class AllData{
   final DailyData dData;
 
   AllData(this.wData, this.lData, this.aData, this.dData);
-
 }
 
 class FinalData{
-
   Future<WeatherData> getFinalData(String city) async{
     try{
       GetWeatherData instance = GetWeatherData();
       final data = await instance.getData(city);
-      //final city = data.
       return data;
     }on Exception catch (e) {
       print(e);
-      throw Exception("error 2");
+      throw Exception("error $e");
     }
   }
 }
 
-
 class AnotherData{
   Future<AnotherWeatherData> getAnotherData(String city) async{
-
     GetAnotherWeatherData instance = GetAnotherWeatherData();
     final data = await instance.getData(city);
     return data;
   }
 }
+
 class AnotherDailyData{
   Future<DailyData> getDailyData(double? lat, long) async{
-
     GetDailyData instance = GetDailyData();
     final data = await instance.getData(lat, long);
     return data;
-
   }
-
-
 }
+
 class AnotherLatLongData{
   Future<LatLongData> getLatLongData(String city) async{
-
     GetLatLongData instance = GetLatLongData();
     final data = await instance.getData(city);
     return data;

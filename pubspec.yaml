@@ -69,27 +69,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
 
   assets:
-     - assets/weather_correspondent_images/01d@2x.png
-     - assets/weather_correspondent_images/01n@2x.png
-     - assets/weather_correspondent_images/02d@2x.png
-     - assets/weather_correspondent_images/02n@2x.png
-     - assets/weather_correspondent_images/03d@2x.png
-     - assets/weather_correspondent_images/03n@2x.png
-     - assets/weather_correspondent_images/04d@2x.png
-     - assets/weather_correspondent_images/04n@2x.png
-     - assets/weather_correspondent_images/09d@2x.png
-     - assets/weather_correspondent_images/09n@2x.png
-     - assets/weather_correspondent_images/10d@2x.png
-     - assets/weather_correspondent_images/10n@2x.png
-     - assets/weather_correspondent_images/11d@2x.png
-     - assets/weather_correspondent_images/11n@2x.png
-     - assets/weather_correspondent_images/13d@2x.png
-     - assets/weather_correspondent_images/13n@2x.png
-     - assets/weather_correspondent_images/50d@2x.png
-     - assets/weather_correspondent_images/50n@2x.png
-     - assets/background_images/IMG_2627.JPG
-     - assets/background_images/IMG_1.png
-     - assets/background_images/background1.jpg
+     - assets/weather_correspondent_images/
+     - assets/background_images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

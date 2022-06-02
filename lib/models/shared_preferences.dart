@@ -6,8 +6,8 @@ class Preferences{
   static Future init() async{
     return _preferences = await SharedPreferences.getInstance();
   }
-  Future setLocations(List<String> list) async{
-    return await _preferences.setStringList('list', list);
+  Future setLocations(List<String> list) {
+    return _preferences.setStringList('list', list);
   }
   List<String>? getLocations(){
     return _preferences.getStringList('list');

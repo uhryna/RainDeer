@@ -1,6 +1,3 @@
-
-//import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:new_test/models/locations_list.dart';
 import 'package:new_test/models/shared_preferences.dart';
@@ -17,29 +14,28 @@ Future main () async{
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers:[
-          ChangeNotifierProvider(create: (_) => LocationsList(),),
-          //ChangeNotifierProvider(create: (_) =>)
-        ],
-      
+      providers:[
+        ChangeNotifierProvider(create: (_) => LocationsList(),),
+      ],
       child: MaterialApp(
-          routes: {
-            '/home': (context) => Home(),
-            '/locations': (context) => LocationsPage(),
-            '/settings': (context) => SettingsPage(),
-            '/wardrobe': (context) => WardrobePage(),
-            '/test': (context) => Test(),
-          },
-          title: 'RainDeer',
-          theme: ThemeData(
-            iconTheme: IconThemeData(color: Colors.white),
-            //useMaterial3: true,
+        routes: {
+          '/home': (context) => Home(),
+          '/locations': (context) => LocationsPage(),
+          '/settings': (context) => SettingsPage(),
+          '/wardrobe': (context) => WardrobePage(),
+          '/test': (context) => Test(),
+        },
+        title: 'RainDeer',
+        theme: ThemeData(
+          iconTheme: IconThemeData(
+              color: Colors.white
           ),
-          home: Home()),
+        ),
+        home: Home()
+      ),
     );
   }
 }
