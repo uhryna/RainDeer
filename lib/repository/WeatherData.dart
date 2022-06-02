@@ -60,7 +60,7 @@ class WeatherData {
   int? timezone;
   int? id;
   String? name;
-  int? cod;
+  dynamic cod;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -202,7 +202,7 @@ class Main {
     grndLevel = json['grnd_level'];
   }
   double? temp;
-  double? feelsLike;
+  num? feelsLike;
   double? tempMin;
   double? tempMax;
   int? pressure;

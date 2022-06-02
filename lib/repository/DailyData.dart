@@ -256,12 +256,12 @@ class Temp {
     eve = json['eve'];
     morn = json['morn'];
   }
-  double? day;
-  double? min;
-  double? max;
-  double? night;
-  double? eve;
-  double? morn;
+  num? day;
+  num? min;
+  num? max;
+  num? night;
+  num? eve;
+  num? morn;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

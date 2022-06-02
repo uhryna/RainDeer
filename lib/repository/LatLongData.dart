@@ -8,8 +8,8 @@
 class LatLongData {
   String? name;
   LocalNames? localNames;
-  double? lat; //TODO переробити
-  double? lon;  //TODO переробити
+  double? lat;
+  double? lon;
   String? country;
   String? state;
 
@@ -25,7 +25,7 @@ class LatLongData {
     return LatLongData(lat: lat, lon: lon);
   }
 
-  LatLongData.fromJson(Map<String, dynamic> json) { //TODO переробити під фекторі констрк
+  LatLongData.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     localNames = json['local_names'] != null
         ? new LocalNames.fromJson(json['local_names'])
