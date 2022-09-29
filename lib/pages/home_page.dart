@@ -1,25 +1,31 @@
+import 'dart:math';
+import 'package:new_test/database/database.dart';
+import 'package:new_test/models/gender.dart';
 import 'package:new_test/models/icons.dart';
+import 'package:new_test/models/wardrobe.dart';
+import 'package:new_test/pages/wardrobe_page.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:new_test/models/parse_data.dart';
 import 'package:new_test/models/get_data.dart';
 import '../models/locations_list.dart';
 
 class Home extends StatefulWidget {
-   Home({Key? key}) : super(key: key);
+  int selectedIndex;
+   Home(this.selectedIndex, {Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  final controller = PageController();
+  var controller = PageController();
 
   @override
   void initState() {
     super.initState();
+    controller = PageController(initialPage: widget.selectedIndex);
   }
 
   @override
@@ -104,10 +110,6 @@ class _HomeState extends State<Home> {
                     value: 1,
                     child: Text('Settings')
                   ),
-                  PopupMenuItem(
-                    value: 0,
-                      child: Text('Share')
-                  )
                 ],
               ),
             ),
@@ -140,7 +142,7 @@ class _HomeState extends State<Home> {
 }
 
 class CityWidget extends StatefulWidget {
-  final String city;
+  final String? city;
   const CityWidget({Key? key, required this.city}) : super(key: key);
 
   @override
@@ -152,8 +154,8 @@ class _CityWidgetState extends State<CityWidget> {
   late Future<dynamic> future;
 
   Future<void> _refresh() async {
-    Future.delayed(Duration(seconds: 2));
-    collectAllData(widget.city);
+    //Future.delayed(Duration(seconds: 2));
+    await collectAllData(widget.city);
 
   }
   @override
@@ -247,23 +249,493 @@ class _CityWidgetState extends State<CityWidget> {
                                                       width: 1,
                                                     ),
                                                   ),
-                                                  child: InkWell(
-                                                    splashColor: Colors.blueAccent.withOpacity(0.1),
-                                                    onTap: () {
-                                                      Navigator.pushNamed(context, '/wardrobe');
-                                                      print(snapshot.data?.wData.main?.temp);
+                                                  child: Consumer<GenderCheck>(
+                                                    builder: (context, gendercheck, child) {
+                                                      print('${gendercheck.gender} check');
+                                                      return InkWell(
+                                                      splashColor: Colors.blueAccent.withOpacity(0.1),
+                                                      onTap: () async{
+                                                        final random = Random();
+                                                        if(gendercheck.gender == 'Female' || gendercheck.gender == 'Unspecified'){
+                                                          var overTop = await DatabaseHelper().getClothes(1);
+                                                          var overTopRandom = overTop[random.nextInt(overTop.length)];
+                                                          var middleTop = await DatabaseHelper().getClothes(2);
+                                                          var middleTopRandom = middleTop[random.nextInt(middleTop.length)];
+                                                          var underTop = await DatabaseHelper().getClothes(3);
+                                                          var underTopRandom = underTop[random.nextInt(underTop.length)];
+                                                          var shortBottom = await DatabaseHelper().getClothes(4);
+                                                          var shortBottomRandom = shortBottom[random.nextInt(shortBottom.length)];
+                                                          var longBottom = await DatabaseHelper().getClothes(5);
+                                                          var longBottomRandom = longBottom[random.nextInt(longBottom.length)];
+                                                          var warmFootwear = await DatabaseHelper().getClothes(7);
+                                                          var warmFootwearRandom = warmFootwear[random.nextInt(warmFootwear.length)];
+                                                          var lightFootwear = await DatabaseHelper().getClothes(8);
+                                                          var lightFootwearRandom = lightFootwear[random.nextInt(lightFootwear.length)];
+                                                          var warmAccessories = await DatabaseHelper().getClothes(9);
+                                                          var warmAccessoriesRandom = warmAccessories[random.nextInt(warmAccessories.length)];
+                                                          var defaultAccessories = await DatabaseHelper().getClothes(10);
+                                                          var defaultAccessoriesRandom = defaultAccessories[random.nextInt(defaultAccessories.length)];
+                                                          var umbrellaAccessories = await DatabaseHelper().getClothes(11);
+                                                          var umbrellaAccessoriesRandom = umbrellaAccessories[random.nextInt(umbrellaAccessories.length)];
+                                                          var bags = await DatabaseHelper().getClothes(12);
+                                                          var bagsRandom = bags[random.nextInt(bags.length)];
+                                                          print('the user is female');
+                                                          if(snapshot.data?.wData.main?.temp?.round() < -20){
+                                                            //await DatabaseHelper().getClothes(1);
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  overTopRandom,
+                                                                  middleTopRandom,
+                                                                  underTopRandom,
+                                                                  longBottomRandom,
+                                                                  warmFootwearRandom,
+                                                                  warmAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < -10 && snapshot.data?.wData.main?.temp?.round() > -20){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  overTopRandom,
+                                                                  middleTopRandom,
+                                                                  underTopRandom,
+                                                                  longBottomRandom,
+                                                                  warmFootwearRandom,
+                                                                  warmAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 0 && snapshot.data?.wData.main?.temp?.round() >= -10){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  overTopRandom,
+                                                                  middleTopRandom,
+                                                                  underTopRandom,
+                                                                  longBottomRandom,
+                                                                  warmFootwearRandom,
+                                                                  warmAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 5 && snapshot.data?.wData.main?.temp?.round() >= 0){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  overTopRandom,
+                                                                  middleTopRandom,
+                                                                  underTopRandom,
+                                                                  longBottomRandom,
+                                                                  warmFootwearRandom,
+                                                                  warmAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 10 && snapshot.data?.wData.main?.temp?.round() >= 5){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  overTopRandom,
+                                                                  middleTopRandom,
+                                                                  underTopRandom,
+                                                                  longBottomRandom,
+                                                                  warmFootwearRandom,
+                                                                  warmAccessoriesRandom,
+                                                                  defaultAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 15 && snapshot.data?.wData.main?.temp?.round() >= 10){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  overTopRandom,
+                                                                  middleTopRandom,
+                                                                  underTopRandom,
+                                                                  longBottomRandom,
+                                                                  lightFootwearRandom,
+                                                                  defaultAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 22 && snapshot.data?.wData.main?.temp?.round() >= 15){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  middleTopRandom,
+                                                                  underTopRandom,
+                                                                  longBottomRandom,
+                                                                  lightFootwearRandom,
+                                                                  defaultAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 25 && snapshot.data?.wData.main?.temp?.round() >= 22){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  underTopRandom,
+                                                                  shortBottomRandom,
+                                                                  lightFootwearRandom,
+                                                                  defaultAccessoriesRandom,
+                                                                  umbrellaAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 30 && snapshot.data?.wData.main?.temp?.round() >= 25){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  underTopRandom,
+                                                                  shortBottomRandom,
+                                                                  lightFootwearRandom,
+                                                                  defaultAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 60 && snapshot.data?.wData.main?.temp?.round() >= 30){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  underTopRandom,
+                                                                  shortBottomRandom,
+                                                                  lightFootwearRandom,
+                                                                  defaultAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                        }
+                                                        else{
+                                                          var overTop = await DatabaseHelper().getMaleClothes(1, 'both');
+                                                          var overTopRandom = overTop[random.nextInt(overTop.length)];
+                                                          var middleTop = await DatabaseHelper().getMaleClothes(2, 'both');
+                                                          var middleTopRandom = middleTop[random.nextInt(middleTop.length)];
+                                                          var underTop = await DatabaseHelper().getMaleClothes(3, 'both');
+                                                          var underTopRandom = underTop[random.nextInt(underTop.length)];
+                                                          var shortBottom = await DatabaseHelper().getMaleClothes(4, 'both');
+                                                          var shortBottomRandom = shortBottom[random.nextInt(shortBottom.length)];
+                                                          var longBottom = await DatabaseHelper().getMaleClothes(5, 'both');
+                                                          var longBottomRandom = longBottom[random.nextInt(longBottom.length)];
+                                                          var warmFootwear = await DatabaseHelper().getMaleClothes(7, 'both');
+                                                          var warmFootwearRandom = warmFootwear[random.nextInt(warmFootwear.length)];
+                                                          var lightFootwear = await DatabaseHelper().getMaleClothes(8, 'both');
+                                                          var lightFootwearRandom = lightFootwear[random.nextInt(lightFootwear.length)];
+                                                          var warmAccessories = await DatabaseHelper().getMaleClothes(9, 'both');
+                                                          var warmAccessoriesRandom = warmAccessories[random.nextInt(warmAccessories.length)];
+                                                          var defaultAccessories = await DatabaseHelper().getMaleClothes(10, 'both');
+                                                          var defaultAccessoriesRandom = defaultAccessories[random.nextInt(defaultAccessories.length)];
+                                                          var umbrellaAccessories = await DatabaseHelper().getMaleClothes(11, 'both');
+                                                          var umbrellaAccessoriesRandom = umbrellaAccessories[random.nextInt(umbrellaAccessories.length)];
+                                                          var bags = await DatabaseHelper().getMaleClothes(12, 'both');
+                                                          var bagsRandom = bags[random.nextInt(bags.length)];
+                                                          print('the user is male');
+                                                          if(snapshot.data?.wData.main?.temp?.round() < -20){
+                                                            //await DatabaseHelper().getClothes(1);
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  overTopRandom,
+                                                                  middleTopRandom,
+                                                                  underTopRandom,
+                                                                  longBottomRandom,
+                                                                  warmFootwearRandom,
+                                                                  warmAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < -10 && snapshot.data?.wData.main?.temp?.round() > -20){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  overTopRandom,
+                                                                  middleTopRandom,
+                                                                  underTopRandom,
+                                                                  longBottomRandom,
+                                                                  warmFootwearRandom,
+                                                                  warmAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 0 && snapshot.data?.wData.main?.temp?.round() >= -10){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  overTopRandom,
+                                                                  middleTopRandom,
+                                                                  underTopRandom,
+                                                                  longBottomRandom,
+                                                                  warmFootwearRandom,
+                                                                  warmAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 5 && snapshot.data?.wData.main?.temp?.round() >= 0){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  overTopRandom,
+                                                                  middleTopRandom,
+                                                                  underTopRandom,
+                                                                  longBottomRandom,
+                                                                  warmFootwearRandom,
+                                                                  warmAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 10 && snapshot.data?.wData.main?.temp?.round() >= 5){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  overTopRandom,
+                                                                  middleTopRandom,
+                                                                  underTopRandom,
+                                                                  longBottomRandom,
+                                                                  warmFootwearRandom,
+                                                                  warmAccessoriesRandom,
+                                                                  defaultAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 15 && snapshot.data?.wData.main?.temp?.round() >= 10){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  overTopRandom,
+                                                                  middleTopRandom,
+                                                                  underTopRandom,
+                                                                  longBottomRandom,
+                                                                  lightFootwearRandom,
+                                                                  defaultAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 22 && snapshot.data?.wData.main?.temp?.round() >= 15){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  middleTopRandom,
+                                                                  underTopRandom,
+                                                                  longBottomRandom,
+                                                                  lightFootwearRandom,
+                                                                  defaultAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 25 && snapshot.data?.wData.main?.temp?.round() >= 22){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  underTopRandom,
+                                                                  shortBottomRandom,
+                                                                  lightFootwearRandom,
+                                                                  defaultAccessoriesRandom,
+                                                                  umbrellaAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 30 && snapshot.data?.wData.main?.temp?.round() >= 25){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  underTopRandom,
+                                                                  shortBottomRandom,
+                                                                  lightFootwearRandom,
+                                                                  defaultAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                          if(snapshot.data?.wData.main?.temp?.round() < 60 && snapshot.data?.wData.main?.temp?.round() >= 30){
+                                                            var instance = Wardrobe(
+                                                                [
+                                                                  underTopRandom,
+                                                                  shortBottomRandom,
+                                                                  lightFootwearRandom,
+                                                                  defaultAccessoriesRandom,
+                                                                  bagsRandom,
+                                                                ]
+                                                            );
+                                                            if(snapshot.data.wData.weather[0].main == 'Rain' || snapshot.data.wData.weather[0].main == 'Thunderstorm' || snapshot.data.wData.weather[0].main == 'Drizzle'){
+                                                              instance.items.add(umbrellaAccessoriesRandom);
+                                                            }
+                                                            Navigator.of(context).push(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => WardrobePage(wardrobe : instance),
+                                                                )
+                                                            );
+                                                          }
+                                                        }
+
+
+                                                      },
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        children: <Widget>[
+                                                          Icon(Icons.umbrella_outlined, color: Colors.white,),
+                                                          Text("Wardrobe",
+                                                            style:TextStyle(
+                                                              color: Colors.white,
+                                                            ) ,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
                                                     },
-                                                    child: Column(
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: <Widget>[
-                                                        Icon(Icons.umbrella_outlined, color: Colors.white,),
-                                                        Text("Wardrobe",
-                                                          style:TextStyle(
-                                                            color: Colors.white,
-                                                          ) ,
-                                                        ),
-                                                      ],
-                                                    ),
                                                   ),
                                                 ),
                                               ),

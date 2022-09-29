@@ -1,6 +1,9 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:new_test/models/gender.dart';
+import 'package:new_test/models/shared_preferences.dart';
+import 'package:provider/provider.dart';
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
@@ -11,8 +14,8 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
 
-  int _valueTheme = 1;
-  int _valueUnit = 1;
+  int? _valueTheme = Preferences().getValue();
+  int? _valueUnit = Preferences().getValue();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(15, 20, 0, 10),
                 child: Text(
-                  'Theme',
+                  'Gender',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
@@ -51,61 +54,17 @@ class _SettingsPageState extends State<SettingsPage> {
                     side: BorderSide(color: Colors.black, width: 1),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  title: const Text('White'),
+                  title: const Text('Female'),
                   leading: Radio(
                     value: 1,
                     groupValue: _valueTheme,
                     onChanged: (value) {
                       setState(() {
                         _valueTheme = value as int;
+                        context.read<GenderCheck>().toFemale();
+                        Preferences().setValue(value);
                       });
                     },
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10,0,10,0),
-                child: ListTile(
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.black, width: 1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  title: const Text('Dark'),
-                  leading: Radio(
-                    value: 2,
-                    groupValue: _valueTheme,
-                    onChanged: (value) {
-                      setState(() {
-                        _valueTheme = value as int;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              /*Card(
-                  color: Colors.grey[300],
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Text('White',
-                          style: TextStyle(
-                            fontSize: 23,
-                            fontWeight: FontWeight.w300
-                          ),
-                        ),
-                      ),
-                      Icon(Icons.circle)
-                    ],
-                  ),
-                ),*/
-              Padding(
-                padding: const EdgeInsets.fromLTRB(15, 15, 0, 10),
-                child: Text(
-                  'Units',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
                   ),
                 ),
               ),
@@ -116,32 +75,36 @@ class _SettingsPageState extends State<SettingsPage> {
                     side: BorderSide(color: Colors.black, width: 1),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  title: const Text('Metric'),
+                  title: const Text('Male'),
                   leading: Radio(
-                    value: 1,
-                    groupValue: _valueUnit,
+                    value: 2,
+                    groupValue: _valueTheme,
                     onChanged: (value) {
                       setState(() {
-                        _valueUnit = value as int;
+                        _valueTheme = value as int;
+                        context.read<GenderCheck>().toMale();
+                        Preferences().setValue(value);
                       });
                     },
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(10,0,10,0),
+                padding: const EdgeInsets.fromLTRB(10,0,10,5),
                 child: ListTile(
                   shape: RoundedRectangleBorder(
                     side: BorderSide(color: Colors.black, width: 1),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  title: const Text('Imperial'),
+                  title: const Text('Unspecified'),
                   leading: Radio(
-                    value: 2,
-                    groupValue: _valueUnit,
+                    value: 3,
+                    groupValue: _valueTheme,
                     onChanged: (value) {
                       setState(() {
-                        _valueUnit = value as int;
+                        _valueTheme = value as int;
+                        context.read<GenderCheck>().toUnspecified();
+                        Preferences().setValue(value);
                       });
                     },
                   ),

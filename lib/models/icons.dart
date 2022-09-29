@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 class CustomIcons{
 
-  AssetImage showIcons(id){
+  AssetImage showIcons(id){   //TODO зробити enum
     switch(id) {
       case '01d': {
         return AssetImage('assets/weather_correspondent_images/01d@2x.png');
