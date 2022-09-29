@@ -5,8 +5,8 @@ import 'package:new_test/repository/WeatherData.dart';
 
 import '../repository/data_provider.dart';
 
-Future<AllData> collectAllData(String city) async{
-  WeatherData weatherData = await FinalData().getFinalData(city);
+Future<AllData> collectAllData(String? city) async{
+  WeatherData weatherData = await FinalData().getFinalData(city!);
   LatLongData latLongData = await AnotherLatLongData().getLatLongData(city);
   AnotherWeatherData anotherData = await AnotherData().getAnotherData(city);
   DailyData dailyData = await AnotherDailyData().getDailyData(latLongData.lat,latLongData.lon);

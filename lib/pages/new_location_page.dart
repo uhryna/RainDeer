@@ -3,7 +3,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:new_test/models/locations_list.dart';
 import 'package:new_test/models/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import '../database/database.dart';
 import '../models/get_data.dart';
+import '../models/icons.dart';
+import 'home_page.dart';
 
 class LocationsPage extends StatefulWidget {
   const LocationsPage({Key? key}) : super(key: key);
@@ -15,6 +18,7 @@ class LocationsPage extends StatefulWidget {
 class LocationsPageState extends State<LocationsPage> {
 
   TextEditingController textController = TextEditingController();
+
 
   @override
   void initState() {
@@ -63,7 +67,7 @@ class LocationsPageState extends State<LocationsPage> {
               ),
             ),
           ),
-          SliverAppBar( //TODO зробити нормальне відображення міста
+          SliverAppBar( //TODO зробити нормальне відображення міста через бд
             backgroundColor: Colors.white,
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(70.0),
@@ -119,14 +123,16 @@ class LocationsPageState extends State<LocationsPage> {
                             IconButton(
                               onPressed: () async {
                                 var value = await collectAllDataCheck('${textController.text}');
+                                var city = City(cityName: value?.wData.name, cityTemp: value?.wData.main?.temp?.round(), cityMinTemp: value?.wData.main?.tempMin?.round(), cityMaxTemp: value?.wData.main?.tempMax?.round());
                                 if (value == null){
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('We cant find the city')));
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('We cant find this city')));
                                 }
                                 else{
+
                                   locations.addLocation('${textController.text}');
                                   print(locations.locationsList);
                                   await Preferences().setLocations(locations.locationsList);
-                                  print(Preferences().getLocations());
+                                  //DatabaseHelper().addCities(city);
                                 }
                                 textController.clear();
                               },
@@ -161,6 +167,7 @@ class LocationsPageState extends State<LocationsPage> {
                             onPressed: (context) async {
                               locations.deleteLocation(index);
                               await Preferences().setLocations(locations.locationsList);
+                              //DatabaseHelper().removeCity(index);
                               print(locations.locationsList);
                             },
                           ),
@@ -179,16 +186,22 @@ class LocationsPageState extends State<LocationsPage> {
                               ),
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Home(locations.locationsList.indexOf(locations.locationsList[index]))));
+                              },
                             tileColor: Colors.white,
-                            title: Text(
-                              '${locations.locationsList[index]}',
-                              style: TextStyle(
-                                fontSize: 30,
-                                color: Colors.black),),
-                            //leading: ImageIcon(CustomIcons().showIcons(locations.locationsList[index]),
-                            //subtitle: Text('${instance}° / $minTemp°', style: TextStyle(fontSize: 20, color: Colors.black),),
-                            //trailing: Text('$temperature°', style: TextStyle(fontSize: 45, color: Colors.black),),
+                            title: Padding(
+                              padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
+                                child: Text(
+                                '${locations.locationsList[index]}',
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.black
+                                ),
+                              ),
+                            ),
+                            //leading: ImageIcon(CustomIcons().showIcons(variable)),
+                            //trailing: Text('${locations.locationsList[index]}°', style: TextStyle(fontSize: 45, color: Colors.black),),
                           ),
                         ),
                       ),

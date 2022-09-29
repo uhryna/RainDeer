@@ -12,4 +12,10 @@ class Preferences{
   List<String>? getLocations(){
     return _preferences.getStringList('list');
   }
+  Future setValue(int value) {
+    return _preferences.setInt('value', value);
+  }
+  int? getValue(){
+    return _preferences.getInt('value');
+  }
 }

@@ -43,6 +43,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   sqflite: ^2.0.2+1
+  path_provider: ^2.0.10
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,9 @@ flutter:
   assets:
      - assets/weather_correspondent_images/
      - assets/background_images/
+     - assets/clothes.db
+     - assets/clothes_images/
+     - assets/cities.db
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
